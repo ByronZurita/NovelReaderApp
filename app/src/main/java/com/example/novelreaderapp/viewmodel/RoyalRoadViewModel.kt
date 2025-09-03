@@ -112,20 +112,6 @@ class RoyalRoadViewModel : ViewModel() {
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     /**
-     * Loads the latest updated novels from the repository and caches them for search.
-     */
-    fun loadNovelsLive() {
-        viewModelScope.launch {
-            try {
-                // Directly load first page for live latest novels
-                loadNovelsPage(1)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    /**
      * Performs a remote search using the RoyalRoad scraper.
      *
      * @param query The query string to search for.

@@ -65,8 +65,11 @@ fun RoyalRoadScreen(
 
 
     // Load novels once when the screen first composes
+    // Automatically load page 1 if it's not Best Rated mode
     LaunchedEffect(Unit) {
-        { viewModel.loadNovelsPage(1) }
+        if (!viewModel.isBestRated.value) {
+            viewModel.loadNovelsPage(1)
+        }
     }
 
 
