@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
@@ -26,6 +27,9 @@ object AppRoutes {
     /** RoyalRoad scraper source screen */
     const val RoyalRoad = "royalroad"
 
+    /** NovelBin scraper source screen */
+    const val NovelBin = "novelbin"
+
     /** Settings screen */
     const val Settings = "settings"
 
@@ -33,7 +37,7 @@ object AppRoutes {
     const val AuthScreen = "auth"
 
     /** Chapter List screen base route */
-    const val ChapterList = "chapterList"
+    const val ChapterList = "chapterList/{novelId}/{novelUrl}"
 
     /** Chapter Content screen with chapterIndex argument */
     const val ChapterContent = "chapterContent/{chapterIndex}"
@@ -45,12 +49,9 @@ object AppRoutes {
      * @param novelTitle the title of the novel (encoded)
      * @param coverUrl the cover image URL (encoded)
      */
-    fun chapterListRoute(
-        novelUrl: String,
-        novelId: String,
-        novelTitle: String,
-        coverUrl: String
-    ): String = "chapterList?novelUrl=${Uri.encode(novelUrl)}&novelId=$novelId&novelTitle=${Uri.encode(novelTitle)}&coverUrl=${Uri.encode(coverUrl)}"
+
+    fun chapterListRoute(novelId: String, novelUrl: String): String =
+        "chapterList/$novelId/${Uri.encode(novelUrl)}"
 
     /**
      * Helper to build ChapterContent route with chapter index.
@@ -88,10 +89,26 @@ fun AppNavigation(
                         onScraperClick = { source ->
                             when (source.id) {
                                 "royalroad" -> navController.navigate(AppRoutes.RoyalRoad)
-                                "webnovel" -> navController.navigate("webnovel") // Placeholder for future
+                                "novelbin" -> navController.navigate(AppRoutes.NovelBin)
                             }
                         },
                         onNavigateTo = { navController.navigate(it) }
+                    )
+                }
+
+                // NovelBin source main screen
+                composable(AppRoutes.NovelBin) {
+                    NovelBinScreen(
+                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
+                            chapterViewModel.loadChapters(novelId, novelUrl)
+                            navController.navigate(
+                                AppRoutes.chapterListRoute(
+                                    novelId,
+                                    novelUrl
+                                )
+                            )
+                        },
+                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
                     )
                 }
 
@@ -102,10 +119,8 @@ fun AppNavigation(
                             chapterViewModel.loadChapters(novelId, novelUrl)
                             navController.navigate(
                                 AppRoutes.chapterListRoute(
-                                    novelUrl,
                                     novelId,
-                                    novelTitle,
-                                    coverUrl
+                                    novelUrl
                                 )
                             )
                         },
@@ -113,40 +128,30 @@ fun AppNavigation(
                     )
                 }
 
+
                 // Chapter List Screen with multiple arguments
                 composable(
-                    route = AppRoutes.ChapterList + "?novelUrl={novelUrl}&novelId={novelId}&novelTitle={novelTitle}&coverUrl={coverUrl}",
+                    route = AppRoutes.ChapterList,
                     arguments = listOf(
-                        navArgument("novelUrl") { type = NavType.StringType },
                         navArgument("novelId") { type = NavType.StringType },
-                        navArgument("novelTitle") { type = NavType.StringType },
-                        navArgument("coverUrl") { type = NavType.StringType }
+                        navArgument("novelUrl") { type = NavType.StringType }
                     )
                 ) { backStackEntry ->
-                    val args = backStackEntry.arguments!!
-                    val novelUrl = Uri.decode(args.getString("novelUrl") ?: "")
-                    val novelId = args.getString("novelId") ?: ""
-                    val novelTitle = Uri.decode(args.getString("novelTitle") ?: "")
-                    val coverUrl = Uri.decode(args.getString("coverUrl") ?: "")
 
-                    // Load chapters when novel changes
-                    LaunchedEffect(novelUrl, novelId) {
+                    val novelId = backStackEntry.arguments?.getString("novelId") ?: ""
+                    val novelUrl = backStackEntry.arguments?.getString("novelUrl") ?: ""
+
+                    // Obtain ViewModel with backStackEntry as owner to share the same instance
+                    val chapterViewModel: ChapterViewModel = viewModel(backStackEntry)
+
+                    LaunchedEffect(novelId, novelUrl) {
                         chapterViewModel.loadChapters(novelId, novelUrl)
                     }
 
-                    val chapters by chapterViewModel.chapters.collectAsState()
-                    val author by chapterViewModel.author.collectAsState()
-                    val description by chapterViewModel.description.collectAsState()
-                    val tags by chapterViewModel.tags.collectAsState()
-
                     ChapterListScreen(
-                        novelTitle = novelTitle,
-                        author = author,
-                        description = description,
-                        tags = tags,
-                        coverUrl = coverUrl,
-                        chapters = chapters,
+                        viewModel = chapterViewModel,  // Pass the ViewModel instance here!
                         onChapterClick = { chapter ->
+                            val chapters = chapterViewModel.chapters.value
                             val index = chapters.indexOf(chapter)
                             navController.navigate(AppRoutes.chapterContentRoute(index))
                         },
@@ -155,6 +160,9 @@ fun AppNavigation(
                         }
                     )
                 }
+
+
+
 
                 // Chapter Content Screen with chapterIndex parameter
                 composable(

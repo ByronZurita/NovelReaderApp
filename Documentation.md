@@ -9,7 +9,7 @@
 
 * Only scraping RoyalRoad (Latests pages, Best Rated pages, Searchbar pages, Genre Filter)
 * Basic tts and font size
-* Added backend integration
+* Added backend integration (Doesnt interact with scrapers)
 
 ## Vision
 
@@ -96,6 +96,7 @@
 │   ├── 📁 base                # Interfaces and factories used by scrapers
 │   │   ├── NovelScraper.kt    # Optional base interface (can be partial)
 │   │   └── ScraperFactory.kt  # Returns correct scraper per source
+│   ├── NovelBinScraper.kt    # 
 │   └── RoyalRoadScraper.kt    # 
 │   
 📁 ui
@@ -112,6 +113,7 @@
 │   ├── ChapterContentScreen.kt
 │   ├── ChapterListScreen.kt
 │   ├── HomeScreen.kt
+│   ├── NovelBinScreen.kt
 │   └── RoyalRoadScreen.kt
 │
 📁 viewmodel
@@ -120,6 +122,7 @@
 │
 ├── AuthViewmodel.kt
 ├── ChapterViewModel.kt
+├── NovelBinViewModel.kt
 ├── RoyalRoadViewModel.kt
 └── SettingsViewModel.kt
 

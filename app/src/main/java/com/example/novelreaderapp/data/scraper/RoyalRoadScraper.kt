@@ -280,11 +280,15 @@ class RoyalRoadScraper : NovelScraper {
             .userAgent("Mozilla/5.0")
             .get()
 
-        val title = doc.selectFirst("h1.profile-title")?.text() ?: "Unknown Title"
+        val title = doc.selectFirst("h1.profile-title")?.text()
+            ?: doc.selectFirst("meta[name=twitter:title]")?.attr("content")
+            ?: "Unknown Title"
 
         val author = doc.selectFirst("meta[property=books:author]")?.attr("content")
             ?: doc.selectFirst("meta[name=twitter:creator]")?.attr("content")
             ?: "Unknown Author"
+
+        val coverUrl = doc.selectFirst("meta[property=og:image]")?.attr("content")
 
         val descriptionParagraphs = doc.select(".description .hidden-content p")
         val description = if (descriptionParagraphs.isNotEmpty()) {
@@ -298,7 +302,6 @@ class RoyalRoadScraper : NovelScraper {
         val tagElements = doc.select(".tags a.fiction-tag")
         val tags = tagElements.map { it.text().trim() }
 
-
         Novel(
             id = novelUrl.split("/").last(),
             title = title,
@@ -306,9 +309,8 @@ class RoyalRoadScraper : NovelScraper {
             description = description,
             tags = tags,
             url = novelUrl,
+            coverUrl = coverUrl,
             sourceId = "royalroad"
         )
     }
-
-
 }

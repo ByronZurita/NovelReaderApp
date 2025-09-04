@@ -38,7 +38,7 @@ data class ScraperSource(val id: String, val displayName: String)
  */
 val scraperSources = listOf(
     ScraperSource("royalroad", "📚 Royal Road"),
-    ScraperSource("empty1", "📘 Empty Source 1"),
+    ScraperSource("novelbin", "📚 NovelBin"),
     ScraperSource("empty2", "📗 Empty Source 2"),
     ScraperSource("empty3", "📙 Empty Source 3"),
     ScraperSource("empty4", "📒 Empty Source 4"),

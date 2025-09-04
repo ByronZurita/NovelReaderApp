@@ -1,9 +1,11 @@
 package com.example.novelreaderapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.novelreaderapp.data.scraper.base.ScraperFactory
 import com.example.novelreaderapp.data.models.Chapter
+import com.example.novelreaderapp.data.scraper.NovelBinScraper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -26,23 +28,30 @@ class ChapterViewModel : ViewModel() {
     val description: StateFlow<String> = _description
     val tags: StateFlow<List<String>> = _tags
 
+    private val _coverUrl = MutableStateFlow("")
+    val coverUrl: StateFlow<String> = _coverUrl
+
     fun loadChapters(novelId: String, novelUrl: String) {
         viewModelScope.launch {
             try {
                 val scraper = ScraperFactory.getScraper(novelUrl)
                 val novel = scraper.fetchNovelDetails(novelUrl)
-                val fetchedChapters = scraper.fetchNovelChapters(novelUrl)
-
                 _novelTitle.value = novel.title
                 _author.value = novel.author
                 _description.value = novel.description
                 _tags.value = novel.tags
-                _chapters.value = fetchedChapters
+                _coverUrl.value = novel.coverUrl ?: ""
+
+                val chapters = scraper.fetchNovelChapters(novelUrl)
+                _chapters.value = chapters
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("ChapterViewModel", "Error loading chapters/details", e)
+                _description.value = "Failed to load novel details."
+                _chapters.value = emptyList()
             }
         }
     }
+
 
     fun loadChapter(chapterId: String?, chapterUrl: String) {
         viewModelScope.launch {

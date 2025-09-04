@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -15,12 +16,13 @@ import com.example.novelreaderapp.data.models.Chapter
 import com.example.novelreaderapp.ui.components.ScreenTopBar
 import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.novelreaderapp.viewmodel.ChapterViewModel
+import androidx.compose.runtime.getValue
+
 
 /**
  * A composable screen that displays a list of chapters for a selected novel.
- *
- * @param novelTitle The title of the novel (displayed in the top app bar).
- * @param chapters The list of chapters to display.
  * @param onChapterClick Called when a chapter is clicked.
  * @param onNavigateToSettings Callback for navigating to the Settings screen.
  * @param modifier Modifier for customizing the layout.
@@ -28,33 +30,34 @@ import androidx.compose.ui.layout.ContentScale
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ChapterListScreen(
-    novelTitle: String,
-    author: String,
-    tags: List<String>,
-    description: String,
-    coverUrl: String?,
-    chapters: List<Chapter>,
     onChapterClick: (Chapter) -> Unit,
     onNavigateToSettings: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ChapterViewModel
 ) {
+    // 🌟 Collect the state from the ViewModel
+    val title by viewModel.novelTitle.collectAsState()
+    val author by viewModel.author.collectAsState()
+    val description by viewModel.description.collectAsState()
+    val tags by viewModel.tags.collectAsState()
+    val coverUrl by viewModel.coverUrl.collectAsState()
+    val chapters by viewModel.chapters.collectAsState()
+
     // Scaffold provides the base structure including the top app bar
     Scaffold(
         topBar = {
-            // Custom reusable top bar with title and settings icon
             ScreenTopBar(
-                title = novelTitle,
+                title = title,
                 onSettingsClick = onNavigateToSettings
             )
         }
     ) { innerPadding ->
-        // Vertical list of chapter cards
         LazyColumn(
             modifier = modifier
                 .padding(innerPadding)
                 .padding(vertical = 8.dp)
         ) {
-            // 📌 Novel Info Header
+            // 📌 Novel Details Header
             item {
                 Column(
                     modifier = Modifier
@@ -64,7 +67,7 @@ fun ChapterListScreen(
                     coverUrl?.let { url ->
                         AsyncImage(
                             model = url,
-                            contentDescription = "$novelTitle cover image",
+                            contentDescription = "$title cover image",
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(3f / 4f)
@@ -122,8 +125,7 @@ fun ChapterListScreen(
                 }
             }
 
-
-            // 📚 Chapters list
+            // 📚 Chapters List
             items(chapters) { chapter ->
                 Card(
                     modifier = Modifier

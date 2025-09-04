@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun NovelCard(
     title: String,
+    author: String? = null,
     tags: List<String> = emptyList(),
     coverUrl: String? = null,
     onClick: () -> Unit
@@ -47,6 +48,16 @@ fun NovelCard(
                     text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
+
+                // Show author if present
+                if (!author.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "by $author",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
