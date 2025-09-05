@@ -131,7 +131,7 @@ fun RoyalRoadScreen(
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("Latest Updates")
+                        Text("Latest")
                     }
 
                     Button(
