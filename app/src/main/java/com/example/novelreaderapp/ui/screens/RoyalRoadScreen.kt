@@ -96,9 +96,6 @@ fun RoyalRoadScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { searchBarVisible = !searchBarVisible }) {
-                        Icon(Icons.Filled.Search, contentDescription = "Toggle Search")
-                    }
                     IconButton(onClick = onNavigateToSettings) {
                         Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
@@ -121,7 +118,8 @@ fun RoyalRoadScreen(
                 // Row 1: Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
                         onClick = { viewModel.toggleBestRatedMode(false) },
@@ -147,6 +145,11 @@ fun RoyalRoadScreen(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Best Rated")
+                    }
+
+                    // 🔍 Search toggle icon
+                    IconButton(onClick = { searchBarVisible = !searchBarVisible }) {
+                        Icon(Icons.Filled.Search, contentDescription = "Toggle Search")
                     }
                 }
 

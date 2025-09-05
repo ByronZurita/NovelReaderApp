@@ -19,6 +19,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.novelreaderapp.viewmodel.ChapterViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+
 
 
 /**
@@ -112,15 +115,26 @@ fun ChapterListScreen(
                         }
                     }
 
-                    Text(
-                        text = "Description:",
-                        style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
+                    // Limited description
+                    val showFullDescription = remember { mutableStateOf(false) }
+                    val maxLines = if (showFullDescription.value) Int.MAX_VALUE else 5 // Limit lines when collapsed
 
                     Text(
                         text = description,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = maxLines,
+                        modifier = Modifier
+                            .clickable { showFullDescription.value = !showFullDescription.value }
+                            .padding(bottom = 4.dp)
+                    )
+
+                    Text(
+                        text = if (showFullDescription.value) "Show less" else "Show more",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .clickable { showFullDescription.value = !showFullDescription.value }
+                            .padding(bottom = 16.dp)
                     )
                 }
             }

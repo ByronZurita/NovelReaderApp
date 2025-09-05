@@ -30,19 +30,23 @@ import com.example.novelreaderapp.viewmodel.AuthViewModel
  * @param id Unique ID used internally to route or fetch data.
  * @param displayName Display name shown in the UI (may include emojis).
  */
-data class ScraperSource(val id: String, val displayName: String)
-
+data class ScraperSource(
+    val id: String,
+    val flagEmoji: String,
+    val title: String
+)
 /**
  * List of available web scrapers displayed on the home screen.
  * TODO: Replace placeholder entries with actual scraper implementations.
+ * "🇪🇸" "🇺🇸"
  */
 val scraperSources = listOf(
-    ScraperSource("royalroad", "📚 Royal Road"),
-    ScraperSource("novelbin", "📚 NovelBin"),
-    ScraperSource("empty2", "📗 Empty Source 2"),
-    ScraperSource("empty3", "📙 Empty Source 3"),
-    ScraperSource("empty4", "📒 Empty Source 4"),
-    ScraperSource("empty5", "📕 Empty Source 5")
+    ScraperSource("royalroad", "🇺🇸", "Royal Road"),
+    ScraperSource("novelbin", "🇺🇸", "NovelBin"),
+    ScraperSource("empty2", "📗", "Empty Source 2"),
+    ScraperSource("empty3", "📙", "Empty Source 3"),
+    ScraperSource("empty4", "📒", "Empty Source 4"),
+    ScraperSource("empty5", "📕", "Empty Source 5"),
 )
 
 /**
@@ -166,15 +170,13 @@ fun ScraperCard(source: ScraperSource, onClick: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Emoji or icon prefix
             Text(
-                text = source.displayName.take(2),
+                text = source.flagEmoji,
                 fontSize = 32.sp
             )
             Spacer(Modifier.height(8.dp))
-            // Text title of the source
             Text(
-                text = source.displayName.drop(2),
+                text = source.title,
                 style = MaterialTheme.typography.titleMedium
             )
         }
