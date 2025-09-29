@@ -1,6 +1,7 @@
 package com.example.novelreaderapp.ui.screens.common
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -29,6 +30,9 @@ object AppRoutes {
 
     /** NovelBin scraper source screen */
     const val NovelBin = "novelbin"
+
+    /** NovelasLigeras scraper source screen */
+    const val NovelasLigera = "novelasligera"
 
     /** Settings screen */
     const val Settings = "settings"
@@ -87,12 +91,30 @@ fun AppNavigation(
                     HomeScreen(
                         authViewModel = authViewModel,
                         onScraperClick = { source ->
+                            Log.d("NAVIGATION", "Clicked source: ${source.id}")
                             when (source.id) {
                                 "royalroad" -> navController.navigate(AppRoutes.RoyalRoad)
                                 "novelbin" -> navController.navigate(AppRoutes.NovelBin)
+                                "novelasligera" -> navController.navigate(AppRoutes.NovelasLigera)
                             }
                         },
                         onNavigateTo = { navController.navigate(it) }
+                    )
+                }
+
+                // NovelasLigeras source main screen
+                composable(AppRoutes.NovelasLigera) {
+                    NovelasLigeraScreen(
+                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
+                            chapterViewModel.loadChapters(novelId, novelUrl)
+                            navController.navigate(
+                                AppRoutes.chapterListRoute(
+                                    novelId,
+                                    novelUrl
+                                )
+                            )
+                        },
+                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
                     )
                 }
 
