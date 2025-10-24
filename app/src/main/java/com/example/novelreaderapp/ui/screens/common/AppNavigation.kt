@@ -96,55 +96,44 @@ fun AppNavigation(
                                 "royalroad" -> navController.navigate(AppRoutes.RoyalRoad)
                                 "novelbin" -> navController.navigate(AppRoutes.NovelBin)
                                 "novelasligera" -> navController.navigate(AppRoutes.NovelasLigera)
+
                             }
                         },
                         onNavigateTo = { navController.navigate(it) }
                     )
                 }
 
-                // NovelasLigeras source main screen
-                composable(AppRoutes.NovelasLigera) {
-                    NovelasLigeraScreen(
-                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
-                            chapterViewModel.loadChapters(novelId, novelUrl)
-                            navController.navigate(
-                                AppRoutes.chapterListRoute(
-                                    novelId,
-                                    novelUrl
-                                )
-                            )
-                        },
-                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
-                    )
-                }
-
-                // NovelBin source main screen
-                composable(AppRoutes.NovelBin) {
-                    NovelBinScreen(
-                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
-                            chapterViewModel.loadChapters(novelId, novelUrl)
-                            navController.navigate(
-                                AppRoutes.chapterListRoute(
-                                    novelId,
-                                    novelUrl
-                                )
-                            )
-                        },
-                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
-                    )
-                }
-
-                // RoyalRoad source main screen
+                // Generic unified screen
                 composable(AppRoutes.RoyalRoad) {
-                    RoyalRoadScreen(
+                    NovelsScreen(
+                        source = "royalroad", // change dynamically if you want
                         onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
                             chapterViewModel.loadChapters(novelId, novelUrl)
-                            navController.navigate(
-                                AppRoutes.chapterListRoute(
-                                    novelId,
-                                    novelUrl
-                                )
-                            )
+                            navController.navigate(AppRoutes.chapterListRoute(novelId, novelUrl))
+                        },
+                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
+                    )
+                }
+
+                // Generic unified screen
+                composable(AppRoutes.NovelBin) {
+                    NovelsScreen(
+                        source = "novelbin", // change dynamically if you want
+                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
+                            chapterViewModel.loadChapters(novelId, novelUrl)
+                            navController.navigate(AppRoutes.chapterListRoute(novelId, novelUrl))
+                        },
+                        onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
+                    )
+                }
+
+                // Generic unified screen
+                composable(AppRoutes.NovelasLigera) {
+                    NovelsScreen(
+                        source = "novelasligera", // change dynamically if you want
+                        onNovelClick = { novelId, novelUrl, novelTitle, coverUrl ->
+                            chapterViewModel.loadChapters(novelId, novelUrl)
+                            navController.navigate(AppRoutes.chapterListRoute(novelId, novelUrl))
                         },
                         onNavigateToSettings = { navController.navigate(AppRoutes.Settings) }
                     )

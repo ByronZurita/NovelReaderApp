@@ -25,6 +25,37 @@ class NovelBinViewModel : ViewModel() {
     val author: StateFlow<String> = _author
 
     val category = MutableStateFlow("daily") // "daily" or "popular"
+
+    // 🔍 --- Search Support ---
+    private val _searchQuery = MutableStateFlow("")
+    private val _allNovels = MutableStateFlow<List<Novel>>(emptyList())
+
+    fun searchNovels(query: String) {
+        viewModelScope.launch {
+            try {
+                val results = scraper.searchNovels(query)
+                _novels.value = results
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private var searchJob: kotlinx.coroutines.Job? = null
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            kotlinx.coroutines.delay(300) // debounce delay
+            if (query.isBlank()) {
+                _novels.value = _allNovels.value
+            } else {
+                searchNovels(query)
+            }
+        }
+    }
+
     fun loadNovelsPage(page: Int = 1) {
         viewModelScope.launch {
             val result = when (category.value) {
@@ -58,11 +89,12 @@ class NovelBinViewModel : ViewModel() {
         }
     }
 
-    fun searchNovels(query: String) {
-        viewModelScope.launch {
-            val results = scraper.searchNovels(query)
-            _novels.value = results
-            // Reset pagination or other states if necessary
+    fun applyFilter(filter: String) {
+        when (filter) {
+            "daily" -> { toggleCategory("daily"); toggleCompleted(false) }
+            "popular" -> { toggleCategory("popular"); toggleCompleted(false) }
+            "daily_completed" -> { toggleCategory("daily"); toggleCompleted(true) }
+            "popular_completed" -> { toggleCategory("popular"); toggleCompleted(true) }
         }
     }
 }

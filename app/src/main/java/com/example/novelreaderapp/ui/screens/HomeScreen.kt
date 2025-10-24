@@ -1,12 +1,11 @@
 package com.example.novelreaderapp.ui.screens
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,45 +15,33 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.example.novelreaderapp.ui.screens.common.AppRoutes
 import com.example.novelreaderapp.viewmodel.AuthViewModel
 
 /**
  * Represents a web scraper source that the user can choose from.
- *
- * @param id Unique ID used internally to route or fetch data.
- * @param displayName Display name shown in the UI (may include emojis).
  */
 data class ScraperSource(
     val id: String,
     val flagEmoji: String,
-    val title: String
+    val title: String,
+    val language: String // "en" or "es"
 )
+
 /**
- * List of available web scrapers displayed on the home screen.
- * TODO: Replace placeholder entries with actual scraper implementations.
- * "🇪🇸" "🇺🇸"
+ * List of available web scrapers.
  */
 val scraperSources = listOf(
-    ScraperSource("royalroad", "🇺🇸", "Royal Road"),
-    ScraperSource("novelbin", "🇺🇸", "NovelBin"),
-    ScraperSource("novelasligera", "🇪🇸", "Novelas Ligera"),
-    ScraperSource("empty3", "📙", "Empty Source 3"),
-    ScraperSource("empty4", "📒", "Empty Source 4"),
-    ScraperSource("empty5", "📕", "Empty Source 5"),
+    ScraperSource("royalroad", "🇺🇸", "Royal Road", "en"),
+    ScraperSource("novelbin", "🇺🇸", "NovelBin", "en"),
+    ScraperSource("novelasligera", "🇪🇸", "Novelas Ligera", "es"),
+    ScraperSource("empty3", "📙", "Empty Source", "es"),
+    ScraperSource("empty4", "📒", "Empty Source", "en"),
+    ScraperSource("empty5", "📕", "Empty Source", "en")
 )
 
 /**
  * Main home screen showing welcome message, scraper list, and top app bar.
- *
- * @param onScraperClick Callback triggered when a scraper is selected.
- * @param onNavigateTo Navigation callback (e.g., for login, register, settings).
- * @param modifier Modifier to apply to the screen layout.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,31 +54,33 @@ fun HomeScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val token by authViewModel.authToken.collectAsState()
 
+    // Selected language filter
+    var selectedLanguage by remember { mutableStateOf("all") }
+
+    // Filtered scraper sources
+    val filteredSources = if (selectedLanguage == "all") {
+        scraperSources
+    } else {
+        scraperSources.filter { it.language == selectedLanguage }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Novel Reader App") },
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    // Login/Profile button: navigates to Auth screen if not logged in
                     TextButton(onClick = {
                         if (token.isNullOrEmpty()) {
-                            // User not logged in -> go to Auth screen, no autoNavigate
                             onNavigateTo("${AppRoutes.AuthScreen}?autoNavigate=false")
                         } else {
-                            // User logged in -> go to profile/dashboard screen (update route if exists)
-                            onNavigateTo(AppRoutes.AuthScreen) // Replace with profile route if available
+                            onNavigateTo(AppRoutes.AuthScreen) // Replace with profile/dashboard route
                         }
                     }) {
                         Text(if (token.isNullOrEmpty()) "Login / Register" else "Profile")
                     }
-
-                    // Settings button icon
                     IconButton(onClick = { onNavigateTo(AppRoutes.Settings) }) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = "Settings"
-                        )
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
                     }
                 }
             )
@@ -103,7 +92,7 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // 🏠 Welcome section (Hero card)
+            // Welcome card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,10 +113,30 @@ fun HomeScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            // 📂 Section title
+            // Language filter chips
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
+                listOf(
+                    "all" to "🌐 All",
+                    "en" to "🇺🇸 English",
+                    "es" to "🇪🇸 Español"
+                ).forEach { (langCode, label) ->
+                    FilterChip(
+                        selected = selectedLanguage == langCode,
+                        onClick = { selectedLanguage = langCode },
+                        label = { Text(label) }
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            // Section title
             Text("Web Scrapers", style = MaterialTheme.typography.titleLarge)
 
-            // 📚 Grid of scraper cards
+            // Grid of scraper cards
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -136,7 +145,7 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(scraperSources) { source ->
+                items(filteredSources) { source ->
                     ScraperCard(source = source) {
                         onScraperClick(source)
                     }
@@ -148,9 +157,6 @@ fun HomeScreen(
 
 /**
  * Displays a card representing a single scraper source.
- *
- * @param source The scraper data to display.
- * @param onClick Action to perform when card is clicked.
  */
 @Composable
 fun ScraperCard(source: ScraperSource, onClick: () -> Unit) {

@@ -3,11 +3,11 @@
 * Do not be creative unless asked
 * Short answers related to the question
 * Request for the documentation if needed
-* No Room related until further understanding.
+* No Room
 
 ## Current State
 
-* Only scraping RoyalRoad (Latests pages, Best Rated pages, Searchbar pages, Genre Filter)
+* Scraping Royalroad(EN), Novelbin(EN), Novelasligera(ES)
 * Basic tts and font size
 * Added backend integration (Doesnt interact with scrapers)
 
@@ -23,9 +23,8 @@
 
 * Multi-source reading support
 * Seamless live-first experience
-* EPUB reader for offline experience
-* EPUB file creation from scrapers
 * Personalization for users (accounts, progress, bookmarks, lists)
+
 * General user configurations (fonts, themes, tts)
 
 ---
@@ -113,8 +112,7 @@
 │   ├── ChapterContentScreen.kt
 │   ├── ChapterListScreen.kt
 │   ├── HomeScreen.kt
-│   ├── NovelBinScreen.kt
-│   └── RoyalRoadScreen.kt
+│   └── NovelsScreen.kt
 │
 📁 viewmodel
 ├── 📁 factories
@@ -128,19 +126,6 @@
 
 MainActivity.kt            # Entry point of the app
 ```
-
----
-
-## 🧱 How to Extend
-
-1. Create new scraper class: `WebNovelScraper` implementing `NovelScraper`
-2. Register in `ScraperFactory`
-3. Add to source grid on `HomeScreen.kt`
-4. Add navigation + ViewModel support
-5. Integrate Room caching
-6. Extend UI/UX, user feedback, and testing
-7. Create a new screen in `screens/<source>`
-8. Use `ScraperFactory.getScraper("sourceId")` to load the correct scraper
 
 ---
 
@@ -191,7 +176,6 @@ MainActivity.kt            # Entry point of the app
 
 * Jetpack Compose, Material3
 * Navigation Compose
-* Room (with Kotlin extensions)
 * Jsoup (HTML scraping)
 * Gson (JSON parsing)
 * Kotlin Coroutines

@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.novelreaderapp.data.models.Novel
 import com.example.novelreaderapp.data.scraper.NovelasLigeraScraper
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class NovelasLigeraViewModel : ViewModel() {
@@ -19,7 +19,9 @@ class NovelasLigeraViewModel : ViewModel() {
     private val _selectedCategory = MutableStateFlow("main")
     val selectedCategory: StateFlow<String> = _selectedCategory.asStateFlow()
 
-    private var currentPage = 1
+    private val _currentPage = MutableStateFlow(1)
+    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
+
     private var isLoading = false
     private var endReached = false
 
@@ -34,23 +36,35 @@ class NovelasLigeraViewModel : ViewModel() {
 
     fun fetchNextPage() {
         if (isLoading || endReached) return
-        currentPage++
+        _currentPage.value++
         fetchNovelsForCategory(_selectedCategory.value, reset = false)
+    }
+
+    fun loadNextPage() {
+        fetchNextPage()
+    }
+
+    fun loadPreviousPage() {
+        if (_currentPage.value > 1 && !isLoading) {
+            _currentPage.value--
+            fetchNovelsForCategory(_selectedCategory.value, reset = true)
+        }
     }
 
     private fun fetchNovelsForCategory(category: String, reset: Boolean) {
         viewModelScope.launch {
             isLoading = true
             if (reset) {
-                currentPage = 1
                 endReached = false
             }
+
             val fetched = when (category) {
-                "chinese" -> scraper.fetchChineseNovels(currentPage)
-                "korean" -> scraper.fetchKoreanNovels(currentPage)
-                "japanese" -> scraper.fetchJapaneseNovels(currentPage)
-                else -> scraper.fetchNovels() // Assuming main page no pagination
+                "chinese" -> scraper.fetchChineseNovels(_currentPage.value)
+                "korean" -> scraper.fetchKoreanNovels(_currentPage.value)
+                "japanese" -> scraper.fetchJapaneseNovels(_currentPage.value)
+                else -> scraper.fetchNovels() // main page, no pagination
             }
+
             if (reset) {
                 _novels.value = fetched
             } else {
@@ -60,6 +74,7 @@ class NovelasLigeraViewModel : ViewModel() {
                     _novels.value = _novels.value + fetched
                 }
             }
+
             isLoading = false
         }
     }

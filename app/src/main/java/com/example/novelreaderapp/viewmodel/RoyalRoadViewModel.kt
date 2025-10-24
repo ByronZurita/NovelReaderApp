@@ -80,9 +80,11 @@ class RoyalRoadViewModel : ViewModel() {
         if (enabled) {
             loadBestRatedNovels(genre.value)
         } else {
-            loadNovelsPage(1)
+            // pass current genre explicitly so latest updates are filtered correctly
+            loadNovelsPage(1, genre.value)
         }
     }
+
 
     /**
      * Updates the genre filter for best-rated mode.
@@ -93,8 +95,9 @@ class RoyalRoadViewModel : ViewModel() {
     fun updateGenre(newGenre: String) {
         genre.value = newGenre
         _currentPage.value = 1
+
         if (isBestRated.value) {
-            loadBestRatedNovels(newGenre)
+            loadBestRatedNovels(if (newGenre.isBlank()) null else newGenre)
         } else {
             loadNovelsPage(1, newGenre)
         }

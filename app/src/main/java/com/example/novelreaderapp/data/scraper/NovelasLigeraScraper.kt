@@ -155,7 +155,7 @@ class NovelasLigeraScraper : NovelScraper {
                         original = text.substringAfter(":").trim()
                     }
                     // Long description content
-                    description.isEmpty() && text.length > 100 -> {
+                    description.isEmpty() && text.length > 300 -> {
                         description = text
                     }
                 }
