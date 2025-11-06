@@ -1,10 +1,9 @@
-package com.example.novelreaderapp.viewmodel.factories
+package com.example.novelreaderapp.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.novelreaderapp.backendconnection.UserRepository
-import com.example.novelreaderapp.viewmodel.AuthViewModel
 
 class AuthViewModelFactory(
     private val application: Application,

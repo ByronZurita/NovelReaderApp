@@ -10,7 +10,6 @@ import com.example.novelreaderapp.backendconnection.RetrofitClient
 import com.example.novelreaderapp.backendconnection.UserRepository
 import com.example.novelreaderapp.ui.screens.common.AppNavigation
 import com.example.novelreaderapp.viewmodel.*
-import com.example.novelreaderapp.viewmodel.factories.AuthViewModelFactory
 
 /**
  * MainActivity — Application Entry Point.

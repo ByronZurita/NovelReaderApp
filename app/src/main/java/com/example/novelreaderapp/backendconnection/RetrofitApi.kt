@@ -2,6 +2,7 @@ package com.example.novelreaderapp.backendconnection
 
 import com.example.novelreaderapp.backendconnection.backmodels.AuthResponse
 import com.example.novelreaderapp.backendconnection.backmodels.NovelBackend
+import com.example.novelreaderapp.backendconnection.backmodels.PingResponse
 import com.example.novelreaderapp.backendconnection.backmodels.UserCredentials
 import retrofit2.Response
 import retrofit2.http.Body
@@ -11,12 +12,6 @@ import retrofit2.http.Header
 import retrofit2.http.DELETE
 import retrofit2.http.PUT
 import retrofit2.http.Path
-
-// Data class for ping response
-data class PingResponse(
-    val message: String,
-    val timestamp: String
-)
 
 interface ByronApi {
     @POST("users/register")
