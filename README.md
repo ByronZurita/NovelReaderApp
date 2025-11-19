@@ -22,27 +22,18 @@ Small personal project to read web novels on Android. Built in **Android Studio*
 
 ### User Flow
 
-1. Open app → see sources (RoyalRoad, NovelBin)
+1. Open app → see sources (RoyalRoad, NovelBin, NovelasLigera)
 2. Pick a source → browse latest / best / search / filters
 3. Open a novel → view title, description, chapters
 4. Read chapter → adjust font size or start TTS
 
 ### Screenshots
 
-#### Home / Sources
-![Home Screen](Screenshots/Screenshot_20251024_104230_NovelReaderApp.jpg)
+| Home / Sources | Novels List | Novel Details |
+|----------------|-------------|---------------|
+| ![Home Screen](Screenshots/Screenshot_20251024_104230_NovelReaderApp.jpg) | ![Novels List](Screenshots/Screenshot_20251024_104259_NovelReaderApp.jpg) | ![Novel Details](Screenshots/Screenshot_20251024_104328_NovelReaderApp.jpg) |
 
-#### Novels List
-![Novels List](Screenshots/Screenshot_20251024_104259_NovelReaderApp.jpg)
+| Chapter View | Settings / TTS | Search Novel |
+|-------------|----------------|-------------|
+| ![Chapter View](Screenshots/Screenshot_20251024_104340_NovelReaderApp.jpg) | ![Settings](Screenshots/Screenshot_20251024_104400_NovelReaderApp.jpg) | ![Search Novel](Screenshots/Screenshot_20251024_104444_NovelReaderApp.jpg) |
 
-#### Novel Details
-![Novel Details](Screenshots/Screenshot_20251024_104328_NovelReaderApp.jpg)
-
-#### Chapter View
-![Chapter View](Screenshots/Screenshot_20251024_104340_NovelReaderApp.jpg)
-
-#### Settings / TTS
-![Settings](Screenshots/Screenshot_20251024_104400_NovelReaderApp.jpg)
-
-#### Search Novel
-![Search Novel](Screenshots/Screenshot_20251024_104444_NovelReaderApp.jpg)
