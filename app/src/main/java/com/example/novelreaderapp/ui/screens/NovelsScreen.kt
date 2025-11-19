@@ -1,4 +1,4 @@
-package com.example.novelreaderapp.ui.screens.common
+package com.example.novelreaderapp.ui.screens
 
 import RoyalRoadViewModel
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,6 @@ import com.example.novelreaderapp.ui.components.NovelCard
 import com.example.novelreaderapp.ui.viewmodel.NovelasLigeraViewModel
 import com.example.novelreaderapp.viewmodel.*
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Clear
 
 
 @OptIn(ExperimentalMaterial3Api::class)

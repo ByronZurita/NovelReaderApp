@@ -92,7 +92,7 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // Welcome card
+            // 1️⃣ Welcome card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -104,14 +104,46 @@ fun HomeScreen(
                 Column(Modifier.padding(16.dp)) {
                     Text("Welcome to the World of Novels", style = MaterialTheme.typography.headlineSmall)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "Find and read novels with ease from your smartphone",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Text("Find and read novels with ease from your smartphone", style = MaterialTheme.typography.bodyMedium)
                 }
             }
 
+            // 2️⃣  History section
             Spacer(Modifier.height(12.dp))
+            Text("History", style = MaterialTheme.typography.titleLarge)
+
+            Card(
+                onClick = { /* TODO: later navigate to HistoryScreen or show dialog */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(4.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text("Continue Reading", style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            "View your recently read novels",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    TextButton(onClick = { /* TODO: navigate later */ }) {
+                        Text("View All")
+                    }
+                }
+            }
+
+            // 3️⃣ Existing sources section
+            Spacer(Modifier.height(12.dp))
+            Text("Sources", style = MaterialTheme.typography.titleLarge)
 
             // Language filter chips
             Row(
@@ -130,11 +162,6 @@ fun HomeScreen(
                     )
                 }
             }
-
-            Spacer(Modifier.height(8.dp))
-
-            // Section title
-            Text("Web Scrapers", style = MaterialTheme.typography.titleLarge)
 
             // Grid of scraper cards
             LazyVerticalGrid(

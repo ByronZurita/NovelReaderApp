@@ -28,13 +28,12 @@
 ### Fully Implemented
 
 * Jetpack Compose + Material3 UI
-* RoyalRoad integration (novels, chapters, content)
 * MVVM architecture with repositories
 * Basic live mode
 * Font size controls & basic UI navigation
 * Chapter navigation cleanup (use IDs, reduce logs)
 * TTS
-* Search function
+* Search function (Royalroad & NovelBin)
 * User register, login with JWT, CRUD backend service (Byron-Backend)
 
 ### Planned
