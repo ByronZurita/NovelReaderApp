@@ -1,4 +1,4 @@
-# NovelReaderApp – Project Documentation For LLM
+# NovelReaderApp – Android Studio Kotlin Project Documentation 
 
 ## Vision
 
@@ -12,38 +12,74 @@
 
 ## Current State
 
-* Scraping Royalroad(EN), Novelbin(EN), Novelasligera(ES)
-* Basic tts and font size
-* Added backend integration (Doesnt interact with scrapers)
+### Scrapers Available
 
-### Screens
+* RoyalRoad (EN)
+* NovelBin (EN) — updated scraper system
+* NovelasLigera (ES) — categories (CN/KR/JP), search, chapters
 
-* Home Screen: Navbar with app title, profile/login button, and settings icons. Grid of scraper sources, Grid of saved epubs.
-* Scrapers Screens: Common functions (Searchbar, Latest Updates, Best Rated), Unique functions of each source (Genre Filter).
-* Novel Screen: Novel Title, author, tags, description, list of chapters from the novel.
-* Chapter Screen: Navbar with chapter name, settings button, previous/next chapter button. Chapter content.
-* Settings Screen: Font size slider, tts button (popback to chapter), themes (planned).
-* Auth Screen: Screen for register/login and logged user content.
+### 🧭 Screens (Updated)
 
-### Fully Implemented
+* Home Screen
+    Top bar: app title, settings icon, auth/profile button
+    Source grid for scrapers
+    Saved EPUBs section
+    Language filters
 
-* Jetpack Compose + Material3 UI
-* MVVM architecture with repositories
+* Scraper Screens
+    Each scraper has:
+    Search bar
+    Pagination (Next/Previous)
+    Latest releases / Best rated
+    Source-specific filters (e.g. NovelBin category toggle)
+
+* Novel Screen
+    Cover, title, author
+    Tags/genres
+    Description (expandable)
+
+* Chapter list
+    Chapter Screen
+    Custom TopBar: chapter title + settings button
+    Previous/Next chapter buttons
+    Font size scaling
+    TTS integration
+    HTML rendering support
+
+* Settings Screen
+    Custom colored top bar (new!)
+    Font size slider
+    TTS start/stop that pops back to chapter
+    Theme controls (planned)
+
+* Authentication Screen
+    Register / Login
+    Shows user novels from backend
+    CRUD (create, edit, delete saved novels)
+
+### Features Implemented
+
 * Basic live mode
-* Font size controls & basic UI navigation
-* Chapter navigation cleanup (use IDs, reduce logs)
-* TTS
-* Search function (Royalroad & NovelBin)
-* User register, login with JWT, CRUD backend service (Byron-Backend)
+* Jetpack Compose + Material3 UI
+* MVVM architecture
+* Basic live updates
+* Search functionality for RoyalRoad & NovelBin
+* Backend integration: login, register, CRUD for saved novels
+* Token persistence + encrypted storage
+* TTS (play/stop) + font size adjustments
+* Pagination support for scrapers
+* Chapter navigation cleanup & bug fixes
+* Dedicated SettingsViewModel for all reading settings
+* Updated Settings TopBar with custom background color
 
-### Planned
+### In Progress / Planned
 
-* UI polish & design consistency
-* Error handling improvements
-* Basic theming
+* UI rework & design cohesion
+* Theme selection (Dark/Light/custom palettes)
+* Error-handling overhaul
 * Favorites & bookmarks
 * Reading progress tracking
-* Advanced settings (TTS pitch/speed, auto-advance)
+* Advanced TTS settings (pitch, speed, auto-scroll)
 
 ---
 
@@ -64,8 +100,7 @@
 ├── 📁 models
 │   ├── Novel.kt                           # (id:String, title:String, alternativeTitle:String?=null, status:String?=null, author:String, genre:List<String>=emptyList(), description:String, url:String, tags:List<String>=emptyList(), sourceId:String, coverUrl:String?=null)
 │   ├── Chapter.kt                         # (url:String, title:String, content:String?=null, novelUrl:String)
-│   └── ChapterJson.kt                     # JS parsing support (e.g., window.chapters[] from RoyalRoad)
-│                                           # (id:Int, volumeId:Int, title:String, slug:String, date:String, order:Int, visible:Int, subscriptionTiers:Any?, doesNotRollOver:Boolean, isUnlocked:Boolean, url:String)
+│   └── ChapterJson.kt                     # JS parsing support (e.g., window.chapters[] from RoyalRoad) # (id:Int, volumeId:Int, title:String, slug:String, date:String, order:Int, visible:Int, subscriptionTiers:Any?, doesNotRollOver:Boolean, isUnlocked:Boolean, url:String)                      
 │
 ├── 📁 scraper                             # Web scrapers for novel sources
 │   ├── 📁 base                            # Interfaces and factories used by scrapers
@@ -76,27 +111,29 @@
 │   └── RoyalRoadScraper.kt                # Scraper for royalroad.com; fetchNovelsPage(), searchNovels(), fetchNovels(), fetchNovelChapters(), fetchChapterContent(), getBestRatedNovels(), fetchNovelDetails()
 │
 📁 ui                                      # UI layer (Jetpack Compose screens and components)
-├── 📁 components                          # Reusable UI widgets TopBar.kt, Card.kt, Color.kt, Theme.kt, Type.kt
-│   │
-│   📁 screens                             # App screens
+├── 📁 components                          # Reusable UI widgets NovelCard.kt
+│   
+├── 📁 screens                             # App screens
 │   ├── 📁 common                          # Shared UI components and screens
-│   │   ├── AppNavigation.kt               # Defines app navigation graph and routes; HomeScreen(), NovelsScreen(), ChapterListScreen(), ChapterHostScreen(), AuthScreen(), SettingsScreen()
-│   │   ├── AuthScreen.kt                  # Handles user authentication (login/register), displays user novels, allows adding/editing/deleting novels, and manages auth state with reactive Compose UI.
-│   │   └── SettingsScreen.kt              # Allows adjusting font size via slider and controlling TTS playback, reflecting ViewModel state in real-time
-│   │
+│   │   └── AppNavigation.kt               # Defines app navigation graph and routes; HomeScreen(), NovelsScreen(), ChapterListScreen(), ChapterHostScreen(), AuthScreen(), SettingsScreen()
+│   ├── AuthScreen.kt                  # Handles user authentication (login/register), displays user novels, allows adding/editing/deleting novels, and manages auth state with reactive Compose UI.
+│   ├── SettingsScreen.kt              # Allows adjusting font size via slider and controlling TTS playback, reflecting ViewModel state in real-time
 │   ├── ChapterContentScreen.kt            # Displays chapter content with HTML rendering, supports font scaling, TTS, and chapter navigation with Previous/Next controls
 │   ├── ChapterListScreen.kt               # Displays novel details (cover, author, tags, description) and a scrollable list of chapters with expandable description and chapter click handling
 │   ├── HomeScreen.kt                      # Main home screen showing welcome card, language filters, and a grid of available scraper sources with navigation actions
-│   └── NovelsScreen.kt                    # Composable screen to display novels from multiple sources with filters, search, and pagination
+│   └── NovelListScreen.kt                 # Composable screen to display novels from multiple sources with filters, search, and pagination
+│
+├── 📁 theme                              # 
+│   ├── Color.kt                          # Full updated palette Steel1,2,3,4 and Violet1,2,3,4 = Color(0x--------)
+│   ├── Theme.kt                          # ColorSchemes + NovelReaderAppTheme
+│   └── Type.kt                           # Typography: bodyLarge, titleLarge
 │
 📁 viewmodel                               # ViewModel layer (MVVM pattern)
 ├── AuthViewModel.kt                       # Manages authentication, JWT parsing, user session, and user novel CRUD operations
 ├── ChapterViewModel.kt                    # Manages novel and chapter data; loadChapters(), loadChapter(), tracks title, author, description, tags, coverUrl, chapterContent
-├── NovelasLigeraViewModel.kt              # Manages NovelasLigera novels; fetchNovelsForCategory(), fetchNextPage(), loadNextPage(), loadPreviousPage(), selectCategory()
-├── NovelBinViewModel.kt                   # Manages NovelBin novels; loadNovelsPage(), loadNextPage(), loadPreviousPage(), toggleCategory(), toggleCompleted(), applyFilter(), searchNovels(), updateSearchQuery()
-├── RoyalRoadViewModel.kt                  # Manages RoyalRoad novels; loadNovelsPage(), loadBestRatedNovels(), toggleBestRatedMode(), updateGenre(), searchNovels(), updateSearchQuery()
-├── ViewModelFactory.kt                    # Factory to create AuthViewModel instances with Application and UserRepository
-└── SettingsViewModel.kt                   # Manages user settings and TTS playback; htmlContent(), fontSize(), setFontSize(), startTTSAsync(), toggleTTS(), stopTTS()
+├── ScrapersViewmodels.kt                  # Contains NovelasLigeraViewmodel; fetchNovelsForCategory(), fetchNextPage(), loadNextPage(), loadPreviousPage(), selectCategory() | NovelBinViewmodel; loadNovelsPage(), loadNextPage(), loadPreviousPage(), toggleCategory(), toggleCompleted(), applyFilter(), searchNovels(), updateSearchQuery() | RoyalRoadViewModel ; loadNovelsPage(), loadBestRatedNovels(), toggleBestRatedMode(), updateGenre(), searchNovels(), updateSearchQuery().
+├── SettingsViewModel.kt                   # Manages user settings and TTS playback; htmlContent(), fontSize(), setFontSize(), startTTSAsync(), toggleTTS(), stopTTS()
+└── ViewModelFactory.kt                    # Factory to create AuthViewModel instances with Application and UserRepository
 
 MainActivity.kt                            # Entry point of the app (sets up navigation and theme)
 ```

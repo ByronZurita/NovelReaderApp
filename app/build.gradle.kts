@@ -7,11 +7,11 @@ plugins {
 
 
 android {
-    namespace = "com.example.novelreaderapp"
+    namespace = "com.byron.novelreaderapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.novelreaderapp"
+        applicationId = "com.byron.novelreaderapp"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -56,6 +56,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:0.30.1")
     implementation("androidx.compose.foundation:foundation:1.6.0")
     implementation("androidx.room:room-runtime:2.5.1")
+    implementation(libs.androidx.compose.foundation.layout)
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.5.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.0")
