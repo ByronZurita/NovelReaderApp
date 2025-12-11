@@ -17,8 +17,10 @@ Small personal project to read web novels on Android. Built in **Android Studio*
 ### Current State
 
 * Only scraping **RoyalRoad** + **NovelBin** + **NovelasLigera**
-* Basic TTS and font size support
+* Basic TTS, font size support, and themes (only 2)
 * Added backend integration (not yet connected to scrapers)
+* Stub Buttons for Library and History
+* GitHub Repository Card in HomeScreen
 
 ### User Flow
 
@@ -28,12 +30,20 @@ Small personal project to read web novels on Android. Built in **Android Studio*
 4. Read chapter → adjust font size or start TTS
 
 ### Screenshots
+### **Main Screens**
 
-| Home / Sources | Novels List | Novel Details |
-|----------------|-------------|---------------|
-| ![Home Screen](Screenshots/Screenshot_20251024_104230_NovelReaderApp.jpg) | ![Novels List](Screenshots/Screenshot_20251024_104259_NovelReaderApp.jpg) | ![Novel Details](Screenshots/Screenshot_20251024_104328_NovelReaderApp.jpg) |
+| Home / Sources                             | Novels List (RoyalRoad)                                       | Novel Details (RoyalRoad)                                          |
+| ------------------------------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| ![Home Screen](Screenshots/HomeScreen.jpg) | ![Novels List RoyalRoad](Screenshots/NovelList_RoyalRoad.jpg) | ![Novel Details RoyalRoad](Screenshots/NovelDetails_RoyalRoad.jpg) |
 
-| Chapter View | Settings / TTS | Search Novel |
-|-------------|----------------|-------------|
-| ![Chapter View](Screenshots/Screenshot_20251024_104340_NovelReaderApp.jpg) | ![Settings](Screenshots/Screenshot_20251024_104400_NovelReaderApp.jpg) | ![Search Novel](Screenshots/Screenshot_20251024_104444_NovelReaderApp.jpg) |
+### **Additional Sources**
 
+| Novels List (NovelasLigera)                                         | Novel Details (NovelBin)                                        | Novel Details (NovelasLigera)                                             |
+| ------------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| ![NovelList NovelasLigera](Screenshots/NovelList_NovelasLigera.jpg) | ![NovelDetails NovelBin](Screenshots/NovelDetails_NovelBin.jpg) | ![NovelDetails NovelasLigera](Screenshots/NovelDetails_NovelasLigera.jpg) |
+
+### **Reader & Utilities**
+
+| Chapter View                                           | Settings                              | Search                                                |
+| ------------------------------------------------------ | ------------------------------------- | ----------------------------------------------------- |
+| ![Chapter View](Screenshots/ChapterView_RoyalRoad.jpg) | ![Settings](Screenshots/Settings.jpg) | ![Search Novel](Screenshots/SearchNovel_NovelBin.jpg) |
